@@ -23,9 +23,12 @@ dec=0.7 # set weight decrement for habituation
 pls=[0, 0, 1, 0, 0] # set up a pulse
 
 # TODO: then create a list of 6 pulses, called x, to use for input
-x = pls*6
+x = pls*6 + [0]*10 + pls*6
 
 v = stv # Set connection weight to start weight value
+
+forgetflag=True
+
 
 ###############################
 # Set up and run simulation
@@ -50,6 +53,9 @@ for t in range(nTs):
     
     if x[t]>0:
         v *= dec 
+
+    if t>3 and sum(x[t-4:t])==0 and v<stv and forgetflag:
+        v += (stv-v)*.05
 
 #     then indent 4 spaces and write the equation that
 #     describes how each input value in the vector x is 
